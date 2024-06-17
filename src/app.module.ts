@@ -7,6 +7,7 @@ import { AppGateway } from './app/app.gateway';
 import { RoomModule } from './room/room.module';
 import { MessageModule } from './message/message.module';
 import { InformationModule } from './information/information.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { InformationModule } from './information/information.module';
     RoomModule,  // Ensure RoomModule is imported
     MessageModule,
     InformationModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
