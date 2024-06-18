@@ -8,6 +8,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schema/user.schema';
 import { UsersModule } from 'src/users/users.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [PassportModule,
@@ -18,7 +19,16 @@ import { UsersModule } from 'src/users/users.module';
       }
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    UsersModule
+    UsersModule,
+    MailerModule.forRoot({
+      transport: {
+        service: 'Gmail',
+        auth: {
+          user: 'ngkhacdai@gmail.com',
+          pass: 'garz mfwe qcix nijh'
+        }
+      },
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy]
