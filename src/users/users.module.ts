@@ -12,5 +12,6 @@ import { Information, InformationSchema } from 'src/schema/information.schema';
   ],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService]
 })
 export class UsersModule { }

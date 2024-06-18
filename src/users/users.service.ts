@@ -40,8 +40,9 @@ export class UsersService {
     findAll() {
         return this.userData
     }
-    findOne(id: number) {
-        return this.userData.find(user => user.id === id)
+    async findOne(email: string) {
+        const user = this.userModel.findOne({ email: email });
+        return user
     }
     create(createUser: CreateUser) {
         const createData = this.userData.push({
