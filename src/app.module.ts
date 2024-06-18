@@ -8,12 +8,16 @@ import { RoomModule } from './room/room.module';
 import { MessageModule } from './message/message.module';
 import { InformationModule } from './information/information.module';
 import { AuthModule } from './auth/auth.module';
-
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb+srv://wolfteam:dckKJBwsz5shrA8y@ecommercefashion.zxqrsqj.mongodb.net/Trusty_Buy"),
+    ConfigModule.forRoot()
+    ,
+    MongooseModule.forRoot(
+      process.env.DATABASE_URL,
+    ),
     UsersModule,
-    RoomModule,  // Ensure RoomModule is imported
+    RoomModule,
     MessageModule,
     InformationModule,
     AuthModule,
