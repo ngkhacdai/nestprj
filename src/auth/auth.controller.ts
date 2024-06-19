@@ -36,6 +36,6 @@ export class AuthController {
     @ApiBody({ type: signupDto })
     @ApiCreatedResponse()
     login(@Req() req: Request) {
-        return req.user
+        return { accessToken: req.user }
     }
 }

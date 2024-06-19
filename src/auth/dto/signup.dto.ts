@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
-import mongoose from "mongoose";
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class signupDto {
     @IsString()
