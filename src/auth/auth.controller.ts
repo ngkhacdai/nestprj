@@ -1,9 +1,10 @@
-import { Body, Controller, ForbiddenException, Get, Param, ParseIntPipe, Post, ValidationPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, ForbiddenException, Get, Param, ParseIntPipe, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { signupDto } from './dto/signup.dto';
-import { VerifyOtp } from './dto/verifyotp.dto';
+import { Request } from 'express';
+import { LocalGruard } from './gruards/local.gruard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -30,9 +31,11 @@ export class AuthController {
         return user
     }
 
-    @Get('')
-    @ApiBearerAuth()
-    get() {
-        return 'nothing in here';
+    @Post('login')
+    @UseGuards(LocalGruard)
+    @ApiBody({ type: signupDto })
+    @ApiCreatedResponse()
+    login(@Req() req: Request) {
+        return req.user
     }
 }
