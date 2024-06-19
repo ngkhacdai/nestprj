@@ -1,6 +1,6 @@
 import { User, UserDocument } from 'src/schema/user.schema';
 import { JwtService } from '@nestjs/jwt';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthPayloadDto } from './dto/auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -8,6 +8,7 @@ import { totp } from 'otplib';
 import { randomBytes } from 'crypto';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as bcrypt from 'bcrypt';
+import { signupDto } from './dto/signup.dto';
 
 const fakeUser = [{
     id: 1,
@@ -27,16 +28,21 @@ export class AuthService {
         totp.options = { step: 60 }; // Set the OTP validity period to 60 seconds
     }
 
-    validateUser({ username, password }: AuthPayloadDto) {
-        const findUser = fakeUser.find(user => user.username === username);
+    async validateUser({ email, password, role }: signupDto) {
+        const findUser = await this.userModel.findOne({ email: email })
         if (!findUser) {
-            return null;
+            throw new UnauthorizedException('Invalid email')
         }
-        if (findUser.password === password) {
+        const hashPassword = await bcrypt.compare(password, findUser.password)
+        if (!hashPassword) {
+            throw new UnauthorizedException('Invalid password')
+        } else if (role !== findUser.role) {
+            throw new UnauthorizedException('You do not have permission')
+        }
+        else {
             const { password, ...user } = findUser;
             return this.jwtService.sign(user);
         }
-        return null;
     }
 
     async createUser(object: any): Promise<string> {
