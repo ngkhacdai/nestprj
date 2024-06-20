@@ -17,9 +17,6 @@ export class StoreDetail {
     @Prop()
     des: string;
 
-    @Prop({ type: String, unique: true, index: true })
-    emailShop: string;
-
     @Prop()
     address: string;
 

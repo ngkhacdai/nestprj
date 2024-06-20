@@ -10,6 +10,8 @@ import { InformationModule } from './information/information.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { StoredetailModule } from './storedetail/storedetail.module';
+import { ProductModule } from './product/product.module';
 @Module({
   imports: [
     ConfigModule.forRoot()
@@ -19,10 +21,12 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     ),
     UsersModule,
     RoomModule,
+    StoredetailModule,
     MessageModule,
     InformationModule,
     AuthModule,
     CloudinaryModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
