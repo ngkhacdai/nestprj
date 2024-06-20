@@ -8,7 +8,7 @@ export class Information {
     @Prop({ index: true })
     phoneNumber: number
 
-    @Prop({ ref: "Address" })
+    @Prop({ ref: "Address", default: null })
     address: mongoose.Schema.Types.ObjectId
 
     @Prop()

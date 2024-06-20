@@ -9,6 +9,7 @@ import { MessageModule } from './message/message.module';
 import { InformationModule } from './information/information.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 @Module({
   imports: [
     ConfigModule.forRoot()
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     MessageModule,
     InformationModule,
     AuthModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],

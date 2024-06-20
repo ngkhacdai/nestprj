@@ -15,7 +15,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     JwtModule.register({
       secret: 'abc123',
       signOptions: {
-        expiresIn: '1h'
+        expiresIn: '30d'
       }
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
