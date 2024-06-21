@@ -1,7 +1,27 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber, IsObject, IsString, ValidateNested, ArrayMinSize, IsArray, IsOptional } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import {
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+    ValidateNested,
+    ArrayMinSize,
+    IsArray
+} from "class-validator";
 
+const isArrayWithNoNestedArrays = (fields) => {
+    const value = JSON.parse(fields.value)
+    // early return if fields is not an array
+    if (!value) return null;
+
+    return value.map((field) => {
+
+        // replace array with not valid value
+        // in my case it's null here
+        if (Array.isArray(field)) return null;
+        return field;
+    });
+};
 class OptionDto {
     @IsString()
     @ApiProperty({ example: 'S' })
@@ -17,6 +37,9 @@ class ProductAttributesDto {
     @ApiProperty({ example: 'black' })
     color: string;
 
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => OptionDto)
     @ApiProperty({ type: [OptionDto] })
     options: OptionDto[];
 }
@@ -44,16 +67,25 @@ export class CreateProductDto {
     @ApiProperty({ type: String, description: 'category', example: '657dd96725b94a98c4b49846' })
     category: string;
 
+    @IsArray()
+    @ArrayMinSize(1)
+    // @ValidateNested({ each: true })
+    @Transform(isArrayWithNoNestedArrays)
+    @Type(() => ProductAttributesDto)
     @ApiProperty({
-        type: () => ProductAttributesDto,
+        type: [ProductAttributesDto],
         description: 'product_attributes',
-        example: [{
-            color: 'black',
-            options: [{
-                size: 'S',
-                options_quantity: 100
-            }]
-        }]
+        example: [
+            {
+                color: 'black',
+                options: [
+                    {
+                        size: 'S',
+                        options_quantity: 100
+                    }
+                ]
+            }
+        ]
     })
-    product_attributes?: ProductAttributesDto[];
+    product_attributes: ProductAttributesDto[];
 }

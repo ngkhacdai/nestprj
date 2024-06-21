@@ -26,7 +26,11 @@ export class ProductService {
                 quantity: 0,
                 options: []
             }
-            attribute.options.map((option) => {
+            let attr = attribute;
+            if (typeof attribute !== 'object') {
+                attr = JSON.parse(JSON.stringify(JSON.parse(attribute)))
+            }
+            attr.options.map((option) => {
                 att.options.push({
                     size: option.size,
                     options_quantity: option.options_quantity,
