@@ -28,7 +28,7 @@ export class AuthService {
         totp.options = { step: 60 }; // Set the OTP validity period to 60 seconds
     }
 
-    async validateUser({ email, password, role }: signupDto) {
+    async validateUser({ email, password }: signupDto) {
         const findUser = await this.userModel.findOne({ email: email })
         if (!findUser) {
             throw new UnauthorizedException('Invalid email')
@@ -36,8 +36,6 @@ export class AuthService {
         const hashPassword = await bcrypt.compare(password, findUser.password)
         if (!hashPassword) {
             throw new UnauthorizedException('Invalid password')
-        } else if (role !== findUser.role) {
-            throw new UnauthorizedException('You do not have permission')
         }
         else {
             const { password, ...user } = findUser;

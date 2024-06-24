@@ -41,7 +41,7 @@ export class Product {
     category: MongooseSchema.Types.ObjectId
 
     @Prop({ type: [product_attributes_schema] })
-    product_attributes: object
+    product_attributes: Array<Record<string, any>>
 
     @Prop({
         type: Number,

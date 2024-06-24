@@ -12,6 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { StoredetailModule } from './storedetail/storedetail.module';
 import { ProductModule } from './product/product.module';
+import { CartModule } from './cart/cart.module';
+import { CheckoutModule } from './checkout/checkout.module';
 @Module({
   imports: [
     ConfigModule.forRoot()
@@ -27,6 +29,8 @@ import { ProductModule } from './product/product.module';
     AuthModule,
     CloudinaryModule,
     ProductModule,
+    CartModule,
+    CheckoutModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
