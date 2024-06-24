@@ -53,4 +53,9 @@ export class ProductService {
         })
         return newProduct
     }
+
+    async findOneProduct(productId) {
+        const findProduct = await this.productModel.findOne({ _id: productId })
+        return findProduct
+    }
 }
