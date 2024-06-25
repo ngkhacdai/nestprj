@@ -18,6 +18,13 @@ export class UsersService {
         return user
     }
 
+    async getInformationByUserId(userId: string) {
+        const user = await this.userModel.findOne({ _id: userId }, { information: 1, _id: 0 }).populate({
+            path: "information",
+        }).exec()
+        return user;
+    }
+
     async updateUserInformation(userId: string, id: mongoose.Types.ObjectId) {
         const user = await this.userModel.findOneAndUpdate({ _id: userId }, {
             $set: {

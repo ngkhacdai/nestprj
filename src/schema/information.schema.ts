@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
+import { Address } from "./address.schema";
 
 export type InformationDocument = HydratedDocument<Information>
 
@@ -8,8 +9,8 @@ export class Information {
     @Prop({ index: true })
     phoneNumber: number
 
-    @Prop({ ref: "Address", default: null })
-    address: mongoose.Schema.Types.ObjectId
+    @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: "Address", default: null }])
+    address: Address[]
 
     @Prop()
     avatar: string

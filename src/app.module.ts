@@ -14,6 +14,8 @@ import { StoredetailModule } from './storedetail/storedetail.module';
 import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { CheckoutModule } from './checkout/checkout.module';
+import { StripeModule } from './stripe/stripe.module';
+import { AddressModule } from './address/address.module';
 @Module({
   imports: [
     ConfigModule.forRoot()
@@ -31,6 +33,8 @@ import { CheckoutModule } from './checkout/checkout.module';
     ProductModule,
     CartModule,
     CheckoutModule,
+    StripeModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],

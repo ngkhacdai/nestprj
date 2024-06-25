@@ -19,7 +19,7 @@ export class User {
     @Prop({ enum: ["Admin", "Shop", "User"], default: "User" })
     role: string
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'information', default: null })
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Information', default: null })
     information: mongoose.Schema.Types.ObjectId;
 
     @Prop({ default: false })

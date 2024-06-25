@@ -58,4 +58,49 @@ export class ProductService {
         const findProduct = await this.productModel.findOne({ _id: productId })
         return findProduct
     }
+
+    async decrementQuantity(quantity: number, productId: string, color: string, size: string) {
+        try {
+            // Find the product by productId
+            const product = await this.productModel.findById(productId);
+
+            if (!product) {
+                throw new Error('Product not found');
+            }
+
+            // Find the correct product_attribute object based on color
+            const productAttribute = product.product_attributes.find(attr => attr.color === color);
+
+            if (!productAttribute) {
+                throw new Error('Product attribute not found');
+            }
+
+            // Find the correct options object based on size within productAttribute.options
+            const option = productAttribute.options.find(opt => opt.size === size);
+
+            if (!option) {
+                throw new Error('Size option not found');
+            }
+
+            // Calculate new options_quantity
+            const newQuantity = option.options_quantity - quantity;
+
+            if (newQuantity < 0) {
+                throw new Error('Quantity to decrement exceeds available quantity');
+            }
+            productAttribute.quantity = productAttribute.quantity - quantity;
+            // Update the options_quantity for the found option
+            option.options_quantity = newQuantity;
+            product.product_quantity = product.product_quantity - quantity
+            // Save the updated product document
+            await product.save();
+
+            return product; // Return the updated product document
+        } catch (error) {
+            // Handle errors appropriately
+            console.error('Error updating quantity:', error);
+            throw error;
+        }
+    }
+
 }

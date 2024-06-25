@@ -24,7 +24,7 @@ export class AuthController {
 
     @Post('verify/:otp')
     @ApiBody({ type: signupDto })
-    @ApiForbiddenResponse({ type: 'Otp is not correct' })
+    @ApiForbiddenResponse({ description: 'Otp is not correct' })
     @ApiCreatedResponse()
     async verifyOtp(@Param('otp') otp: string, @Body(ValidationPipe) body: signupDto) {
         const user = await this.authService.verifyOtp(otp, body);

@@ -20,8 +20,10 @@ export class CartService {
         findProduct.product_attributes.map((item) => {
             if (item.color === product.color) {
                 item.options.map((item) => {
-                    item.size === product.size
-                    return checkProduct = true
+                    if (item.size === product.size) {
+                        return checkProduct = true
+
+                    }
                 })
             }
         })
@@ -110,7 +112,7 @@ export class CartService {
         if (!findCart) {
             throw new ForbiddenException('Cart not found');
         }
-        let cart = new Promise((resolve, reject) => {
+        const cart = new Promise((resolve, reject) => {
             findCart.cart_products.map(async (item) => {
                 if (item.productId.toString() === product.productId && item.color === product.color && item.size === product.size) {
                     resolve(await this.cartModel.findOneAndUpdate({ cart_userId: userId }, {
@@ -125,8 +127,8 @@ export class CartService {
                     }, { new: true }))
                 }
             })
+            resolve(null)
         })
-
         if (!cart) {
             throw new ForbiddenException('Product not found');
         }
