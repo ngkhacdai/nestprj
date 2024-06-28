@@ -22,6 +22,9 @@ export class StoreDetail {
 
     @Prop([{ type: MongooseSchema.Types.ObjectId, ref: 'User' }])
     follower: MongooseSchema.Types.ObjectId[];
+
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Trustypay', default: null })
+    trustypay: MongooseSchema.Types.ObjectId;
 }
 
 export const StoreDetailSchema = SchemaFactory.createForClass(StoreDetail);

@@ -13,6 +13,7 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
     CloudinaryModule
   ],
   controllers: [StoredetailController],
-  providers: [StoredetailService]
+  providers: [StoredetailService],
+  exports: [StoredetailService]
 })
 export class StoredetailModule { }

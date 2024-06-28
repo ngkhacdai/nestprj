@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { ProductModule } from 'src/product/product.module';
 import { AddressModule } from 'src/address/address.module';
 import { StripeModule } from 'src/stripe/stripe.module';
+import { ZalopayModule } from 'src/zalopay/zalopay.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { StripeModule } from 'src/stripe/stripe.module';
     UsersModule,
     ProductModule,
     AddressModule,
-    StripeModule
+    StripeModule,
+    ZalopayModule,
   ],
   controllers: [CheckoutController],
   providers: [CheckoutService]

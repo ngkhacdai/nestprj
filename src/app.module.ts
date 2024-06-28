@@ -17,6 +17,7 @@ import { CheckoutModule } from './checkout/checkout.module';
 import { StripeModule } from './stripe/stripe.module';
 import { AddressModule } from './address/address.module';
 import { ZalopayModule } from './zalopay/zalopay.module';
+import { TrustypayModule } from './trustypay/trustypay.module';
 @Module({
   imports: [
     ConfigModule.forRoot()
@@ -37,6 +38,7 @@ import { ZalopayModule } from './zalopay/zalopay.module';
     StripeModule,
     AddressModule,
     ZalopayModule,
+    TrustypayModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
