@@ -1,5 +1,6 @@
+import { CheckoutService } from './../checkout/checkout.service';
 import { TrustypayService } from './../trustypay/trustypay.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import axios from 'axios';
 import * as moment from 'moment';
 import * as CryptoJS from 'crypto-js';
@@ -9,14 +10,17 @@ import * as NodeRSA from 'node-rsa';
 
 @Injectable()
 export class ZalopayService {
-    constructor(private trustypayService: TrustypayService) { }
+    private url;
+    constructor(private trustypayService: TrustypayService,@Inject(forwardRef(() => CheckoutService)) private readonly checkoutService: CheckoutService,) {
+        this.url = 'https://454a-171-241-89-121.ngrok-free.app'
+    }
     private config = {
         app_id: "2553",
         key1: "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL",
         key2: "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz",
         endpoint: "https://sb-openapi.zalopay.vn/v2/create",
         endpointVerifyAccount: "https://sb-openapi.zalopay.vn/v2/disbursement/user",
-        endpointTransfer: "https://sb-openapi.zalopay.vn/v2/transferMoney",
+        endpointTransfer: "https://sb-openapi.zalopay.vn/v2/disbursement/transfer-fund",
         endpointquery: "https://sb-openapi.zalopay.vn/v2/query",
         rsaPublicKey: `
         -----BEGIN PUBLIC KEY-----
@@ -25,70 +29,6 @@ export class ZalopayService {
         `
     };
 
-    // async transfer(): Promise<any> {
-    //     try {
-    //         // Prepare data for the ZaloPay request
-    //         const embed_data = {
-    //             merchantinfo: "embed_data123"
-    //         };
-
-    //         const items = [{
-    //             itemid: "knb",
-    //             itemname: "kim nguyen bao",
-    //             itemprice: 198400,
-    //             itemquantity: 1
-    //         }];
-
-    //         // Encrypt payment code using RSA
-    //         const paymentCodeRaw = "542373909900000106"; // Replace with your actual payment code
-    // const key = new NodeRSA(this.config.rsaPublicKey, {
-    //     encryptionScheme: 'pkcs1'
-    // });
-    //         const payment_code = key.encrypt(paymentCodeRaw, 'base64');
-    //         // Generate a unique transaction ID
-    //         const app_trans_id = `${moment().format('YYMMDDHHmmss')}_${uuidv1().replace(/-/g, '').slice(0, 10)}`;
-
-    //         // Construct the order object with required fields
-    //         const order: any = {
-    //             app_id: this.config.app_id,
-    //             app_trans_id,
-    //             app_user: "240626000000741",
-    //             app_time: Math.floor(Date.now() / 1000), // Use seconds for app_time
-    //             amount: 1000,
-    //             description: "ZaloPay Integration Demo",
-    //             userip: "127.0.0.1",
-    //             item: JSON.stringify(items),
-    //             embed_data: JSON.stringify(embed_data),
-    //             payment_code: payment_code,
-    //         };
-
-    //         // Construct data string for HMAC calculation
-    //         const data = `${order.app_id}|${order.app_trans_id}|${order.app_user}|${order.amount}|${order.app_time}|${order.embed_data}|${order.item}|${paymentCodeRaw}`;
-    //         order.mac = CryptoJS.HmacSHA256(data, this.config.key1).toString();
-
-    //         // Make the POST request to ZaloPay endpoint
-    //         const response = await axios.post(this.config.endpointTransfer, qs.stringify(order), {
-    //             headers: {
-    //                 'Content-Type': 'application/x-www-form-urlencoded'
-    //             }
-    //         });
-
-    //         // Log and return the response data
-    //         console.log('ZaloPay API Response:', response.data);
-    //         return response.data;
-    //     } catch (error) {
-    //         // Handle errors
-    //         console.error('Error calling ZaloPay API:', error);
-
-    //         // Check if error indicates Payment Code expiration
-    //         if (error.response && error.response.data && error.response.data.sub_return_code === -322) {
-    //             // Handle Payment Code expiration error here, e.g., prompt user to retry with a new Payment Code
-    //             console.error('Payment Code expired. Please obtain a new Payment Code.');
-    //         }
-
-    //         throw error; // Rethrow the error or handle it appropriately
-    //     }
-    // }
     async verifyAccount() {
         const time = Date.now();
         const message = [Number(this.config.app_id), '0983946066', time].join("|");
@@ -99,10 +39,44 @@ export class ZalopayService {
         return result.data;
     }
 
+    async withDrawMoney() {
+        const paymentCodeRaw = "240626000000741";
+        const key = new NodeRSA(this.config.rsaPublicKey, {
+            encryptionScheme: 'pkcs1'
+        });
+        const receiver_info = key.encrypt(paymentCodeRaw, 'base64');
+        const order: any = {
+            app_id: Number(this.config.app_id),
+            payment_id: "240626000000741",
+            partner_order_id: "231010_6006493217",
+            disbursement_type: "WALLET",
+            receiver_info: "Mc_oDa9hPMGDN36mVeSd-RGAMoU3azapJkxPSr16zCs",
+            amount: 100000,
+            description: "Bonuses for users",
+            partner_embed_data: {},
+            extra_info: {},
+            time: Date.now(),
+        }
+
+        const message = `${order.app_id}
+        |${order.payment_id}
+        |${order.partner_order_id}
+        |${order.disbursement_type}
+        |${order.receiver_info}
+        |${order.amount}
+        |${order.description}
+        |${order.partner_embed_data}
+        |${order.extra_info}
+        |${order.time}`;
+
+        order.mac = CryptoJS.HmacSHA256(message, this.config.key1).toString();
+        const result = await axios.post(this.config.endpointTransfer, null, { params: order, headers: { 'Content-Type': 'application/json' } });
+        return result.data;
+    }
 
     async payment(listOrder: any) {
         const embed_data = {
-            redirecturl: 'https://20b6-171-241-89-121.ngrok-free.app'
+            redirecturl: this.url
         };
         const items = []
 
@@ -117,7 +91,8 @@ export class ZalopayService {
                         itemname: itemProduct.productId.product_name,
                         itemprice: itemProduct.productId.product_price,
                         itemquantity: itemProduct.quantity,
-                        itemshop: itemProduct.productId.product_shop
+                        itemshop: itemProduct.productId.product_shop,
+                        itemOrder: item._id
                     })
                 })
             })
@@ -132,7 +107,7 @@ export class ZalopayService {
             embed_data: JSON.stringify(embed_data),
             amount,
             description: `Payment for the order #${transID}`,
-            callback_url: "https://20b6-171-241-89-121.ngrok-free.app/zalopay/callback",
+            callback_url: `${this.url}/zalopay/callback`,
         };
 
         const data = `${this.config.app_id}|${order.app_trans_id}|${order.app_user}|${order.amount}|${order.app_time}|${order.embed_data}|${order.item}`;
@@ -161,6 +136,7 @@ export class ZalopayService {
                 // thanh toán thành công
                 // merchant cập nhật trạng thái cho đơn hàng
                 await this.trustypayService.checkShopPayment(item)
+                await this.checkoutService.updateStatusOrder(item)
                 const dataJson = JSON.parse(dataStr);
                 console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
 

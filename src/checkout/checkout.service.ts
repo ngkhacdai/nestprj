@@ -108,5 +108,16 @@ export class CheckoutService {
 
 
     }
-
+    async updateStatusOrder(item: any) {
+        const order = await item.map(async order => {
+            await this.orderModel.findOneAndUpdate({_id: order.itemOrder},{
+                $set: {
+                    order_status: 'Đã thanh toán'
+                }
+            })
+        },{new: true})
+        //log order update
+        console.log(order);
+        
+    }
 }

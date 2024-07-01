@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -16,9 +16,10 @@ import { ZalopayModule } from 'src/zalopay/zalopay.module';
     ProductModule,
     AddressModule,
     StripeModule,
-    ZalopayModule,
+    forwardRef(() => ZalopayModule),
   ],
   controllers: [CheckoutController],
-  providers: [CheckoutService]
+  providers: [CheckoutService],
+  exports: [CheckoutService]
 })
 export class CheckoutModule { }
