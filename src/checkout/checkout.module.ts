@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { ProductModule } from 'src/product/product.module';
 import { AddressModule } from 'src/address/address.module';
 import { StripeModule } from 'src/stripe/stripe.module';
+import { ZalopayModule } from 'src/zalopay/zalopay.module';
 
 @Module({
   imports: [
@@ -14,9 +15,11 @@ import { StripeModule } from 'src/stripe/stripe.module';
     UsersModule,
     ProductModule,
     AddressModule,
-    StripeModule
+    StripeModule,
+    forwardRef(() => ZalopayModule),
   ],
   controllers: [CheckoutController],
-  providers: [CheckoutService]
+  providers: [CheckoutService],
+  exports: [CheckoutService]
 })
 export class CheckoutModule { }

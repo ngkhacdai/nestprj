@@ -1,3 +1,4 @@
+import { ZalopayService } from './../zalopay/zalopay.service';
 import { StripeService } from './../stripe/stripe.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -15,7 +16,8 @@ export class CheckoutService {
         private productService: ProductService,
         private addressService: AddressService,
         private usersService: UsersService,
-        private stripeService: StripeService
+        private stripeService: StripeService,
+        private zalopayService: ZalopayService
     ) { }
 
     async checkout(userId: string, body: CreateCheckoutDto) {
@@ -24,7 +26,7 @@ export class CheckoutService {
         if (!user) {
             throw new ForbiddenException('User not found');
         }
-
+        const listProduct = []
         const address = await this.addressService.getAddressById(body.addressId, user);
         if (!address) {
             throw new ForbiddenException('Address not found');
@@ -58,6 +60,7 @@ export class CheckoutService {
                     quantity: item1.quantity,
                 });
                 await this.productService.decrementQuantity(item1.quantity, item1.productId, item1.color, item1.size)
+                listProduct.push(product);
             }
 
             const order_checkout = {
@@ -68,7 +71,7 @@ export class CheckoutService {
             };
 
             try {
-                const newOrder = await this.orderModel.create({
+                const newOrder = await (await this.orderModel.create({
                     order_userId: userId,
                     order_checkout,
                     order_shipping: {
@@ -81,6 +84,9 @@ export class CheckoutService {
                         shopId: Object.keys(grouped)[index],
                         item_products
                     }
+                })).populate({
+                    path: 'order_products.item_products.productId',
+                    model: 'Product',
                 });
                 if (body.order_payment === 'Card') {
                     await this.stripeService.checkOut(totalPrice)
@@ -91,8 +97,27 @@ export class CheckoutService {
             }
         }));
 
-        return listOrder;
+        switch (body.order_payment.toLocaleLowerCase()) {
+            case 'card':
+                const response = await this.zalopayService.payment(listOrder)
+                return response;
+            default:
+                return listOrder;
+
+        }
+
 
     }
-
+    async updateStatusOrder(item: any) {
+        const order = await item.map(async order => {
+            await this.orderModel.findOneAndUpdate({_id: order.itemOrder},{
+                $set: {
+                    order_status: 'Đã thanh toán'
+                }
+            })
+        },{new: true})
+        //log order update
+        console.log(order);
+        
+    }
 }

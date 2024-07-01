@@ -30,4 +30,18 @@ export class StoredetailService {
         })
         return updateShop;
     }
+
+    async getStoreDetail(userId: string) {
+        const findStore = await this.storeDetailModel.findOne({
+            _id: userId
+        })
+        return findStore
+    }
+    async updatePayment(userId: string, paymentId: string) {
+        return await this.storeDetailModel.findOneAndUpdate({ _id: userId }, {
+            $set: {
+                trustypay: paymentId
+            }
+        }, { new: true })
+    }
 }

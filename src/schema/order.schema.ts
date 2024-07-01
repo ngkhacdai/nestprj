@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 
 export type OrderDocument = Order & Document
-
+@Schema()
 class orderCheckout {
     //Tổng tiền hàng
     @Prop({ type: Number, required: true })
@@ -17,7 +17,7 @@ class orderCheckout {
     @Prop({ type: Number, required: true })
     totalCheckout: number;
 }
-
+@Schema()
 class orderShipping {
     @Prop({ type: String, required: true })
     Address: string;
@@ -26,7 +26,7 @@ class orderShipping {
     @Prop({ type: Number, required: true })
     PhoneNumber: number;
 }
-
+@Schema()
 class ItemProduct {
     @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
     productId: mongoose.Schema.Types.ObjectId;
@@ -43,7 +43,7 @@ class ItemProduct {
     @Prop({ type: mongoose.Schema.Types.ObjectId, default: null })
     discountId: mongoose.Schema.Types.ObjectId;
 }
-
+@Schema()
 class orderProducts {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'StoreDetail', required: true })
     shopId: mongoose.Schema.Types.ObjectId;
