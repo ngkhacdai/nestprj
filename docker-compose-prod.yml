@@ -1,0 +1,35 @@
+
+services:
+  nestjs_docker_prod:
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=mongodb+srv://wolfteam:dckKJBwsz5shrA8y@ecommercefashion.zxqrsqj.mongodb.net/Trusty_Buy
+      - ENCRYPTION_PASSWORD=d72c87d0f077c7766f2985dfab30e8955c373a13a1e93d315203939f542ff86e73ee37c31f4c4b571f4719fa8e3589f12db8dcb57ea9f56764bb7d58f64cf705
+      - REACT_APP_PAYMENT_ID=CASHIN
+      - CLOUDINARY_NAME=db8hv0w70
+      - CLOUDINARY_API_KEY=733537392791634
+      - CLOUDINARY_API_SECRET=i1ikMzrQED8LtuxLrV0c2Ub4sAM
+      - STRIPE_SECRET_KEY=sk_test_51PVNc8KK1ud1Vhmo3llKQebUzMaLe6Ykv9Yi9KJqieui0QwSfS25SCySGOZoJ9ZoZFbwJTe83icXlfBjYvtwmCpJ00sQx49PLb
+    volumes:
+      - ./src:/usr/src/app/src
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false

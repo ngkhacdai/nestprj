@@ -20,8 +20,9 @@ import { ZalopayModule } from './zalopay/zalopay.module';
 import { TrustypayModule } from './trustypay/trustypay.module';
 @Module({
   imports: [
-    ConfigModule.forRoot()
-    ,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(
       process.env.DATABASE_URL,
     ),
