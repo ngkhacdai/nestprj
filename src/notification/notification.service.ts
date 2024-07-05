@@ -14,8 +14,8 @@ export class NotificationService {
             receiverID
         })
     }
-    async getAllNotificationById(receiveId: string) {
-        return await this.notificationModule.find({ receiveId }).sort({ isRead: -1 })
+    async getAllNotificationById(receiverID: string) {
+        return await this.notificationModule.find({ receiverID }).sort({ isRead: -1 })
     }
 
     async changeStatus(noticationId: string) {

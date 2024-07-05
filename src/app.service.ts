@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   constructor(private appGateway: AppGateway) { }
   getHello(): string {
+    // this.appGateway.sendNotifi()
     return 'Hello World!!!!!';
   }
 }

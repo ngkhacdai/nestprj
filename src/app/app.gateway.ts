@@ -28,11 +28,13 @@ export class AppGateway {
 
     try {
       client.join(roomName);
-      const room = await this.roomService.findOne(
-        payload.userId,
-        payload.shopId,
-      );
-      this.server.to(roomName).emit('getallmessage', room.messageId);
+      console.log('zzzzzzzzzzzzzzzz');
+
+      // const room = await this.roomService.findOne(
+      //   payload.userId,
+      //   payload.shopId,
+      // );
+      // this.server.to(roomName).emit('getallmessage', room.messageId);
     } catch (error) {
       client.emit('error', 'An error occurred while joining the room');
       console.error(`Error joining room: ${roomName}`, error);
@@ -83,30 +85,36 @@ export class AppGateway {
   async handleNotification(
     client: Socket,
     payload: { userId: string },
-  ): Promise<void> {
-    client.join(payload.userId);
-    console.log(`User ${payload.userId} joined notification room`);
-    const notification = await this.notificationService.getAllNotificationById(payload.userId)
-    this.server.to(payload.userId).emit('notification', {
-      noti: notification,
-    });
-  }
-
-  async handleSendNotification(
-    object: any
-  ): Promise<void> {
+  ) {
     try {
-      console.log(`Sending notification to user: ${object.receiverID}`);
+      client.join(payload.userId);
 
-      this.server.to(object.receiverID).emit('notification', {
-        noti: {
-          title: object.title,
-          content: object.content,
-          shopId: object.receiverID,
-        },
+      console.log(`User ${payload.userId} joined notification room`);
+      const notification = await this.notificationService.getAllNotificationById(payload.userId)
+      this.server.to(payload.userId).emit('notification', {
+        noti: notification,
       });
     } catch (error) {
-      console.error(error);
+      console.log(error);
+
     }
   }
+
+  // async handleSendNotification(
+  //   object: any
+  // ): Promise<void> {
+  //   try {
+  //     console.log(`Sending notification to user: ${object.receiverID}`);
+
+  //     this.server.to(object.receiverID.toString()).emit('notification', {
+  //       noti: [{
+  //         title: object.title,
+  //         content: object.content,
+  //         shopId: object.receiverID,
+  //       }],
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 }

@@ -117,9 +117,9 @@ export class CheckoutService {
                         })
                     })
                     const notifi = await this.notificationService.create('Đơn hàng mới', content, receiverID)
-                    console.log(notifi);
+                    console.log('Thông báo đơn hàng', notifi);
 
-                    this.appGateway.handleSendNotification(notifi)
+                    // this.appGateway.handleSendNotification(notifi)
                 })
                 return listOrder;
 
