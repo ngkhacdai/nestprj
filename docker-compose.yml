@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - '8080:8080'
     environment:
       - DATABASE_URL=mongodb+srv://wolfteam:dckKJBwsz5shrA8y@ecommercefashion.zxqrsqj.mongodb.net/Trusty_Buy
       - ENCRYPTION_PASSWORD=d72c87d0f077c7766f2985dfab30e8955c373a13a1e93d315203939f542ff86e73ee37c31f4c4b571f4719fa8e3589f12db8dcb57ea9f56764bb7d58f64cf705

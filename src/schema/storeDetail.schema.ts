@@ -25,6 +25,9 @@ export class StoreDetail {
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Trustypay', default: null })
     trustypay: MongooseSchema.Types.ObjectId;
+
+    @Prop([{ type: MongooseSchema.Types.ObjectId, ref: 'Notificationv2', default: null }])
+    isReadNotification: Notification[]
 }
 
 export const StoreDetailSchema = SchemaFactory.createForClass(StoreDetail);

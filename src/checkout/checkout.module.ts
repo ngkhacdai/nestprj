@@ -8,6 +8,10 @@ import { ProductModule } from 'src/product/product.module';
 import { AddressModule } from 'src/address/address.module';
 import { StripeModule } from 'src/stripe/stripe.module';
 import { ZalopayModule } from 'src/zalopay/zalopay.module';
+import { NotificationModule } from 'src/notification/notification.module';
+import { AppGateway } from 'src/app/app.gateway';
+import { RoomModule } from 'src/room/room.module';
+import { GatewayModule } from 'src/app/gateway.module';
 
 @Module({
   imports: [
@@ -17,6 +21,8 @@ import { ZalopayModule } from 'src/zalopay/zalopay.module';
     AddressModule,
     StripeModule,
     forwardRef(() => ZalopayModule),
+    NotificationModule,
+    GatewayModule
   ],
   controllers: [CheckoutController],
   providers: [CheckoutService],

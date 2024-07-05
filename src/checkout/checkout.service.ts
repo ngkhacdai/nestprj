@@ -1,3 +1,5 @@
+import { AppGateway } from './../app/app.gateway';
+import { NotificationService } from './../notification/notification.service';
 import { ZalopayService } from './../zalopay/zalopay.service';
 import { StripeService } from './../stripe/stripe.service';
 import { ForbiddenException, Injectable } from '@nestjs/common';
@@ -17,7 +19,9 @@ export class CheckoutService {
         private addressService: AddressService,
         private usersService: UsersService,
         private stripeService: StripeService,
-        private zalopayService: ZalopayService
+        private zalopayService: ZalopayService,
+        private notificationService: NotificationService,
+        private appGateway: AppGateway
     ) { }
 
     async checkout(userId: string, body: CreateCheckoutDto) {
@@ -102,6 +106,21 @@ export class CheckoutService {
                 const response = await this.zalopayService.payment(listOrder)
                 return response;
             default:
+                listOrder.map(async (item) => {
+                    let content = "Sản phẩm: "
+                    let receiverID = ""
+                    item.order_products.map((item1: any) => {
+                        item1.item_products.map((productId) => {
+
+                            content += productId.productId.product_name + " "
+                            receiverID = productId.productId.product_shop
+                        })
+                    })
+                    const notifi = await this.notificationService.create('Đơn hàng mới', content, receiverID)
+                    console.log(notifi);
+
+                    this.appGateway.handleSendNotification(notifi)
+                })
                 return listOrder;
 
         }
@@ -110,14 +129,14 @@ export class CheckoutService {
     }
     async updateStatusOrder(item: any) {
         const order = await item.map(async order => {
-            await this.orderModel.findOneAndUpdate({_id: order.itemOrder},{
+            await this.orderModel.findOneAndUpdate({ _id: order.itemOrder }, {
                 $set: {
                     order_status: 'Đã thanh toán'
                 }
             })
-        },{new: true})
+        }, { new: true })
         //log order update
         console.log(order);
-        
+
     }
 }

@@ -1,49 +1,66 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 class ProductCheckout {
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ type: String, required: true, example: '664b038613c96a9b38a7ed5f' })
+    @ApiProperty({
+        type: String,
+        required: true,
+        example: '665837c6c7ca4cc71fae05e5',
+    })
     shopId: string;
 
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ type: String, required: true, example: '6662acf35e5af60f12a39a90' })
+    @ApiProperty({
+        type: String,
+        required: true,
+        example: '66850eb85e5af60f12a6c6ce',
+    })
     productId: string;
 
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({ type: Number, required: true, example: 1 })
-    quantity: number
+    quantity: number;
 
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ type: String, required: true, example: 'Lam' })
-    color: string
+    @ApiProperty({ type: String, required: true, example: 'Cam' })
+    color: string;
 
     @IsString()
     @IsNotEmpty()
     @ApiProperty({ type: String, required: true, example: 'L' })
-    size: string
+    size: string;
 
     @IsString()
     @ApiProperty({ type: String })
-    discountId: string
+    discountId: string;
 }
 
 export class CreateCheckoutDto {
     @IsArray()
     @ApiProperty({ type: [ProductCheckout] })
-    productCheckout: ProductCheckout[]
+    productCheckout: ProductCheckout[];
 
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ type: String, required: true, example: '663d72eda406d088f8a1c6c2' })
+    @ApiProperty({
+        type: String,
+        required: true,
+        example: '6686207a5e5af60f12a6d5ee',
+    })
     addressId: string;
 
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ type: String, required: true, enum: ["Thanh toán khi nhận hàng", "Card"], example: 'Thanh toán khi nhận hàng' })
+    @ApiProperty({
+        type: String,
+        required: true,
+        enum: ['Thanh toán khi nhận hàng', 'Card'],
+        example: 'Thanh toán khi nhận hàng',
+    })
     order_payment: string;
 }

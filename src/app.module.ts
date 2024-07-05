@@ -18,6 +18,8 @@ import { StripeModule } from './stripe/stripe.module';
 import { AddressModule } from './address/address.module';
 import { ZalopayModule } from './zalopay/zalopay.module';
 import { TrustypayModule } from './trustypay/trustypay.module';
+import { NotificationModule } from './notification/notification.module';
+import { GatewayModule } from './app/gateway.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +42,8 @@ import { TrustypayModule } from './trustypay/trustypay.module';
     AddressModule,
     ZalopayModule,
     TrustypayModule,
+    NotificationModule,
+    GatewayModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
